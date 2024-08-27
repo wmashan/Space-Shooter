@@ -1,4 +1,7 @@
-/*about our game - 
+/*
+Meet Our team
+Ashan, Nirasha, Tharidu, Gihan
+about our game - 
 name -Space shooter
 type -shooting 
 */
