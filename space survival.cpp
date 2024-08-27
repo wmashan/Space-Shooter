@@ -1,4 +1,4 @@
-about our game - 
+/*about our game - 
 name -Space shooter
 type -shooting 
 */
