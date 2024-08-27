@@ -1,11 +1,3 @@
-/*
-c++ mini PROJECT GROUP 11
-members
-1. IM/2022/025     -   Ashan  
-2. IM/2022/024     - Nirasha
-3. IM/2022/112     - Tharindu
-4. IM/2022/111     -   Gihan
-
 about our game - 
 name -Space shooter
 type -shooting 
