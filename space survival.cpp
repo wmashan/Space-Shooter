@@ -2,7 +2,7 @@
 c++ mini PROJECT GROUP 11
 members
 1. IM/2022/025     -   Ashan  
-2. IM/2022/014     - Nirasha
+2. IM/2022/024     - Nirasha
 3. IM/2022/112     - Tharindu
 4. IM/2022/111     -   Gihan
 
@@ -11,11 +11,11 @@ name -Space shooter
 type -shooting 
 */
 
-#include<iostream>
-#include<conio.h>
-#include <windows.h>   //to move cursor, beep sound
-#include <time.h>
-
+#include<iostream> //This library is used for input and output operations in C++. It provides functionalities for handling standard input and output streams.
+#include <windows.h>// This library provides access to various Windows-specific functionalities such as system calls, console handling, and sound management.SetConsoleCursorPosition and SetConsoleCursorInfo, Beep function
+#include<conio.h> //getch Function, kbhit Function - to detect keyboard hit
+#include <time.h> //time based functions eg: rand Function: Used to generate random numbers for obstacle positions (genObject).
+#include<fstream> // Include fstream for file handling
 
 #define SCREEN_WIDTH 95
 #define SCREEN_HEIGHT 26
@@ -34,9 +34,9 @@ int ObjectFlag[3];
 string playerName;
 
 //shape of ship
-char Ship[3][5] = { ' ',' ',4,' ',' ',  // initialize 2D array for bullets
-					'[',']',4,'[',']',  
-					'=',4,4,4,'=' };
+char Ship[3][5] = { ' ',' ','*',' ',' ',  // initialize 2D array for bullets
+					'[',']','*','[',']',  
+					'=','*','*','*','=' };
 int ShipPos = WIN_WIDTH/2;
 int score = 0;
 int bullets[22][4];
@@ -66,7 +66,8 @@ void credits();
 void drawShip();
 void eraseShip();
 void drawRocketBlasting();
-
+void saveHighScore(); 
+int getHighScore(); 
 int bulletHit();
 void gameover();
 void updatescore();
@@ -123,6 +124,7 @@ void drawBorder(){  // to draw specific symbolic border using printf , in palyin
 void genObject(int ind){ //Generates random positions for obstacles or objects on the screen. The ind parameter indicates which object (out of three) is being generated.
 	ObjectX[ind] = 44 + rand()%(44);    //to change obstacles generate width in console 
 }                                       //Sets ObjectX[ind] to a random value between 44 and 88.
+//The rand() function can be seeded with srand(time(0)) to ensure different sequences of random numbers are generated each time the game is played
 
 //for drawing object Shape using cout statements while object flag is true.
 void drawObject(int ind){   //Draws an obstacle or object at a specified position on the screen. The object is represented with a series of ASCII characters.
@@ -194,8 +196,8 @@ void drawBullets(){ //draw bullets accoding to rocket position
 void eraseBullets(){ //erase each drawn bullets using empty blanks
 	for(int i=0; i<20; i++){
 		if( bullets[i][0] >= 1 ){
-			gotoxy(bullets[i][1],bullets[i][0]); cout<<" ";
-			gotoxy(bullets[i][3],bullets[i][2]); cout<<" ";
+	    gotoxy(bullets[i][1],bullets[i][0]); cout<<" ";
+    	gotoxy(bullets[i][3],bullets[i][2]); cout<<" ";
 		}
 	}
 }
@@ -270,7 +272,16 @@ void gameover(){ // function for represent game over screen
 
 	gotoxy(45,14);
 	cout<<"Your score :"<<score<<endl;
-	gotoxy(45,18);
+	 int highScore = getHighScore();
+    gotoxy(45, 16);
+    cout << "High Score: " << highScore << endl;
+      if (score > highScore) {
+        saveHighScore();
+        gotoxy(45, 18);
+        cout <<"Congratulations !"<<playerName<< " New High Score!" << endl;
+    }
+
+	gotoxy(45,20);
 	cout << "Retry?(y/n) = "; //Asks the player if they want to retry and calls interface2() if they do.
     cin >> ch;
     ch=tolower(ch);
@@ -328,6 +339,27 @@ void drawRocketBlasting() {  //function for drawing ascii art for exit screen
 
     
 }
+
+// Function to save high score to a file
+void saveHighScore() {
+    ofstream outFile("highscore.txt");
+    if (outFile.is_open()) {
+        outFile << score;
+        outFile.close();
+    }
+}
+
+// Function to get the highest score from the file
+int getHighScore() {
+    ifstream inFile("highscore.txt");
+    int highScore = 0;
+    if (inFile.is_open()) {
+        inFile >> highScore;
+        inFile.close();
+    }
+    return highScore;
+}
+
 void updateScore(){  // acceccing create file for read high scores
 	gotoxy(WIN_WIDTH+7, 10);
 	cout<<"Your score: "<<score<<endl;
@@ -423,7 +455,7 @@ void interface1() {   // user interface 1
 	}
 } 
 void interface2(){   // user interface 2
-		do{
+		
 		system("cls");
 		system("color 06");  //system(colour XY)  X-Background , Y-Forground
 		gotoxy(43,9); cout<<" --------------------- ";
@@ -461,24 +493,25 @@ void interface2(){   // user interface 2
             Beep(1459,105);
             quitWindow();
            
-        }
+        
 
 
 
-	}while(1);
 }
+}
+
 void playerInfo(){ 
           
 		system("cls");
 		system("color F5");  //system(colour XY)  X-Background , Y-Forground
 	    
-	gotoxy(15,2); cout<<"  ------------------------------------------------------------------------ ";
-    gotoxy(15,4);cout << "      _____         _  __-__-__-__-__-__-__-__-__-__-__-__-__-__                 " << endl;
-    gotoxy(15,5);cout << "     /     \\    _  | |/                                         \\  " << endl;
-    gotoxy(15,6);cout << "    | () () |  | |  - |   Wellcome ! to the onboard Astronut    |" << endl;
-    gotoxy(15,7);cout << "     \\  ^  /    -     \\Please Enter Your Name to Begin Adventure/" << endl;
-    gotoxy(15,8);cout << "      |||||            \\__-__-__-__-__-__-__-__-__-__-__-__-___/                  " << endl;
-    gotoxy(15,9);cout << "      |||||" << endl;
+	gotoxy(15,2); cout<< " --------------------------------------------------------------------- ";
+    gotoxy(15,4);cout << "       _____         _  __-__-__-__-__-__-__-__-__-__-__-__-__-__                 " << endl;
+    gotoxy(15,5);cout << "      /     \\    _  | |/                                         \\" << endl;
+    gotoxy(15,6);cout << "     | () () |  | |  - |   Wellcome ! to the onboard Astronut     | " << endl;
+    gotoxy(15,7);cout << "      \\  ^ /    -     \\Please Enter Your Name to Begin Adventure/ " << endl;
+    gotoxy(15,8);cout << "       |||||            \\__-__-__-__-__-__-__-__-__-__-__-__-___/                  " << endl;
+    gotoxy(15,9);cout << "       |||||" << endl;
     gotoxy(15,10);cout << "  -------------" << endl;
     gotoxy(15,11);cout << " /  |   ||   |  \\" << endl;
     gotoxy(15,12);cout << "|   |   ||   |   |" << endl;
@@ -488,7 +521,9 @@ void playerInfo(){
     gotoxy(15,16);cout << "       /  \\ " << endl;
     gotoxy(15,17);cout << "      /    \\" << endl;
     gotoxy(38,11); cout<<" Enter Here : ";
-    cin>>playerName;
+
+    
+    getline(cin,playerName);
 	
     interface3();
     }
@@ -500,10 +535,10 @@ void interface3(){     //user interface 3
     gotoxy(43,10); cout<<" |  SELECT GAME TYPE  |     ";
     gotoxy(43,11); cout<<" ---------------------";
     gotoxy(45, 13); cout << "1. Campaign"; //level based game play
-    gotoxy(45, 15); cout << "2. time based"; // play in specific time period
-    gotoxy(45, 17); cout << "3. Go to back";
+    gotoxy(45, 15); cout << "2. time based";// play in specific time period
+    gotoxy(45, 17); cout << "3. Go to back";//
     gotoxy(45, 19); cout << "Select an Option- ";
-    char input= getch();                        //initialize input variable for key board input
+    char input= getch(); //initialize input variable for key board input
     
     	if( input=='1')
         {
@@ -544,6 +579,7 @@ void quitWindow(){
 		cout<<endl;
 		cout<<endl;
 		cout<<endl;
+		
 		cout<<endl;
 		cout<<endl;
 	
@@ -750,5 +786,4 @@ void playTimeBased(){   // play game in specific time period
 	  gameover();  // End the game when time's up
 
 }
-
 
